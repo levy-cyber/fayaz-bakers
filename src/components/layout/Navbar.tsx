@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, MapPin, ChevronDown } from "lucide-react";
+import { Menu, X, MapPin, ChevronDown, Info } from "lucide-react";
 import { useRegion } from "@/context/RegionContext";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import fayazLogo from "@/assets/fayaz-logo.png";
+import RegionDetailsPanel from "./RegionDetailsPanel";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -19,6 +20,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const location = useLocation();
   const { selectedRegion, setSelectedRegion, allRegions } = useRegion();
 
@@ -55,11 +57,11 @@ const Navbar = () => {
           </div>
 
           {/* Region Selector */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
                 <MapPin className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-secondary-foreground">
+                <span className="text-sm font-medium text-secondary-foreground hidden sm:inline">
                   {selectedRegion.name}
                 </span>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
@@ -84,6 +86,16 @@ const Navbar = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Branch Details Button */}
+            <button
+              onClick={() => setShowDetails(true)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors text-primary"
+              title="View branch details"
+            >
+              <Info className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">Details</span>
+            </button>
 
             {/* Mobile Menu Button */}
             <button
@@ -117,6 +129,9 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {/* Region Details Panel */}
+      <RegionDetailsPanel isOpen={showDetails} onClose={() => setShowDetails(false)} />
     </nav>
   );
 };
